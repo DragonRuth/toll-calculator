@@ -52,6 +52,9 @@ def test_fees_by_time_of_day(dates, expected):
 def test_sum_of_fees():
     assert get_toll_fee("Car", [datetime(2024,5,13,14,59,0), datetime(2024,5,13,15,0,0), datetime(2024,5,13,16,59,0)]) == 39
 
+def test_sum_of_fees_multiple_days():
+    assert get_toll_fee("Car", [datetime(2024,5,13,14,59,0), datetime(2024,5,13,15,0,0), datetime(2024,5,13,16,59,0), datetime(2024,5,14,6,30,0), datetime(2024,5,14,7,59,0), datetime(2024,5,14,14,59,0), datetime(2024,5,14,15,0,0), datetime(2024,5,14,16,59,0)]) == 99
+
 def test_maximum_fee_is_60sek():
     assert get_toll_fee("Car", [datetime(2024,5,13,6,30,0), datetime(2024,5,13,7,59,0), datetime(2024,5,13,14,59,0), datetime(2024,5,13,15,0,0), datetime(2024,5,13,16,59,0)]) == 60
 

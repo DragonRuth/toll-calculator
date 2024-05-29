@@ -26,6 +26,17 @@ _TIME_INTERVAL_STARTS = [interval[0] for interval in FEE_TIME_TABLE]
 
 MAX_FEE_PER_DAY = 60
 
+_TOLL_FREE_VEHICLES = [
+    "Motorbike", 
+    "Tractor", 
+    "Emergency",
+    "Diplomat",
+    "Foreign",
+    "Military",
+]
+
+POSSIBLE_VEHICLES = _TOLL_FREE_VEHICLES + ["Car"]
+
 def get_toll_fee(vehicle: str, dates: List[datetime]):
     if _is_toll_free_vehicle(vehicle):
         return 0
@@ -64,14 +75,7 @@ def _get_fee_for_time(time_of_day: time):
 
 
 def _is_toll_free_vehicle(vehicle_type: str):
-    return vehicle_type in [
-    "Motorbike", 
-    "Tractor", 
-    "Emergency",
-    "Diplomat",
-    "Foreign",
-    "Military",
-    ]
+    return vehicle_type in _TOLL_FREE_VEHICLES
 
 def _is_toll_free_day(date: datetime):
     return date in holidays.country_holidays('SE') or date.weekday() >= 5

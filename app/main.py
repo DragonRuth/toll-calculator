@@ -1,7 +1,9 @@
-from fastapi import FastAPI, Query
 from typing import List
 from datetime import datetime
 from enum import Enum
+
+from fastapi import FastAPI, Query
+
 import app.toll_calculator as toll_calculator
 
 VehicleTypes = Enum(

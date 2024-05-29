@@ -1,3 +1,30 @@
+# Toll fee calculator 2.0
+A calculator for vehicle toll fees.
+
+New vehicle toll fee calculator provides a RESTful API for calculating the toll fees. 
+
+Current repositiry language - Python
+
+## Running the code
+
+Recommended way to run this is to use [docker](https://docs.docker.com/)
+
+run 
+```
+docker build -t tollcalc .
+docker run -d --name tollcalc -p 8080:8080 tollcalc
+```
+to start the API at your local machine at port 8080 (or any other of your choosing)
+
+Navigate to http://localhost:8080/docs to see the Open API spec for the application
+
+## Making further adjustments
+
+In case if the time table for the fee changes, it can be adjusted in the toll_calculator module.
+
+
+## Find below old documentation and task description 
+
 ![here we are](https://media.giphy.com/media/FnGJfc18tDDHy/giphy.gif)
 
 # Toll fee calculator 1.0

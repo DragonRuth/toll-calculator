@@ -1,37 +1,49 @@
-using Xunit;
-using TollCalculator;
-using TollCalculator.Toll;
+using TollCalculator.TollFee;
 
 namespace TollCalculator.Tests;
 
 public class TollCalculatorTest
 {
     
-    private static readonly TollFee[] TollFees = new TollFee[]
+    private static readonly TollFeeSpan[] TollFees = new TollFeeSpan[]
     {
-        new TollFee(new TimeSpan(6, 0, 0), new TimeSpan(6, 30, 0), 8m),
-        new TollFee(new TimeSpan(6, 30, 0), new TimeSpan(7, 0, 0), 13m),
-        new TollFee(new TimeSpan(7, 0, 0), new TimeSpan(8, 0, 0), 18m),
-        new TollFee(new TimeSpan(8, 0, 0), new TimeSpan(15, 0, 0), 8m),
-        new TollFee(new TimeSpan(15, 0, 0), new TimeSpan(15, 30, 0), 13m),
-        new TollFee(new TimeSpan(15, 30, 0), new TimeSpan(17, 0, 0), 18m),
-        new TollFee(new TimeSpan(17, 0, 0), new TimeSpan(18, 0, 0), 13m),
-        new TollFee(new TimeSpan(18, 0, 0), new TimeSpan(6, 0, 0), 0m),
+        TollFeeSpan.Create(new TimeSpan(6, 0, 0), new TimeSpan(6, 30, 0), 8m).Value,
+        TollFeeSpan.Create(new TimeSpan(6, 30, 0), new TimeSpan(7, 0, 0), 13m).Value,
+        TollFeeSpan.Create(new TimeSpan(7, 0, 0), new TimeSpan(8, 0, 0), 18m).Value,
+        TollFeeSpan.Create(new TimeSpan(8, 0, 0), new TimeSpan(15, 0, 0), 8m).Value,
+        TollFeeSpan.Create(new TimeSpan(15, 0, 0), new TimeSpan(15, 30, 0), 13m).Value,
+        TollFeeSpan.Create(new TimeSpan(15, 30, 0), new TimeSpan(17, 0, 0), 18m).Value,
+        TollFeeSpan.Create(new TimeSpan(17, 0, 0), new TimeSpan(18, 0, 0), 13m).Value,
+        TollFeeSpan.Create(new TimeSpan(18, 0, 0), new TimeSpan(23, 0, 0), 0m).Value,
     };
 
-    private static readonly TollFeeTable TollFeeTable = TollFeeTable.CreateInstance(TollFees);
-    private static readonly TollCalculator Sut = new TollCalculator(TollFeeTable);
+    private static readonly TollFeeTable TollFeeTable = TollFeeTable.Create(TollFees).Value;
+    private static readonly TollCalculator Sut = new TollCalculator(TollFeeTable, 60, new Vehicle[]
+        { new Vehicle("Motorbike"),
+            new Vehicle("Tractor"),  
+            new Vehicle("Emergency"),
+            new Vehicle("Diplomat"), 
+            new Vehicle("Foreign"),
+            new Vehicle("Military")
+        }, new []
+        {
+            new DateTime(2024, 5, 9, 0, 0, 0),
+            new DateTime(2024, 6, 22, 0, 0, 0),
+        }
+    );
     
     [Fact]
-    public void Max_fine_should_be_60SEK()
+    public void Max_fine_should_be_respected()
     {
         
         var vehicle = new Vehicle("Car");
-        var dateArray = new DateTime[]
+        var dateArray = new []
         {
-            new DateTime(2023, 5, 1),
-            new DateTime(2023, 6, 15),
-            new DateTime(2023, 7, 20)
+            new DateTime(2024, 5, 13, 6, 30, 0),
+            new DateTime(2024, 5, 13, 7, 59, 0),
+            new DateTime(2024, 5, 13, 14, 59, 0),
+            new DateTime(2024, 5, 13, 15, 0, 0),
+            new DateTime(2024, 5, 13, 16, 59, 0)
         };
         var result = Sut.GetTollFee(vehicle, dateArray);
 
@@ -107,8 +119,8 @@ public class TollCalculatorTest
 
     public static IEnumerable<object[]> GetFeeFreeDates()
     {
-        yield return new object[] { new DateTime[] { new DateTime(2024, 5, 11, 17, 0, 0) } };  // weekend
-        yield return new object[] { new DateTime[] { new DateTime(2024, 5, 12, 17, 0, 0) } };  // weekend
+        yield return new object[] { new [] { new DateTime(2024, 5, 11, 17, 0, 0) } };  // weekend
+        yield return new object[] { new [] { new DateTime(2024, 5, 12, 17, 0, 0) } };  // weekend
         yield return new object[] { new DateTime[] { new DateTime(2024, 5, 9, 17, 0, 0) } };   // holiday
     }
 }
